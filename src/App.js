@@ -22,7 +22,8 @@ window.location.hash = ''
 const App = () => {
 	const [token, setToken] = useState(sessionStorage.getItem('token') || null)
 	const [topTracks, setTopTracks] = useState([])
-	const [trackAnalysis, setTrackAnalysis] = useState([])
+	const [analysedTracks, setAnalysedTracks] = useState([])
+	const [stats, setStats] = useState(null)
 
 	useEffect(() => {
 		const _token = hash.access_token
@@ -60,12 +61,31 @@ const App = () => {
 					analysed.push(analysedTrack)
 				}
 
-				setTrackAnalysis(analysed)
+				setAnalysedTracks(analysed)
 			}
 		}
 
 		analyseTracks()
 	}, [topTracks])
+
+	useEffect(() => {
+		const buildStats = () => {
+			if (analysedTracks.length > 0) {
+				const _stats = {
+					acousticness: calcAverageStat('acousticness'),
+					danceability: calcAverageStat('danceability'),
+					energy: calcAverageStat('energy'),
+					instrumentalness: calcAverageStat('instrumentalness'),
+					liveness: calcAverageStat('liveness'),
+					valence: calcAverageStat('valence'),
+				}
+
+				setStats(_stats)
+			}
+		}
+
+		buildStats()
+	}, [analysedTracks])
 
 	const analyseTrack = async track => {
 		const trackAnalysis = await spotify.get(`/audio-features/${track.id}`, {
@@ -75,6 +95,16 @@ const App = () => {
 		})
 
 		return trackAnalysis.data
+	}
+
+	const calcAverageStat = stat => {
+		let statTotal = 0
+
+		analysedTracks.forEach(track => {
+			statTotal += track[stat]
+		})
+
+		return stat, statTotal / analysedTracks.length
 	}
 
 	return (
