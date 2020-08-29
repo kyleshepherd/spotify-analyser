@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import spotify from './apis/spotify'
 
 export const authEndpoint = 'https://accounts.spotify.com/authorize'
 
-const redirectUri = 'http://localhost:3000/callback'
+const redirectUri = 'http://localhost:3000/'
 const scopes = ['user-top-read']
 
 const hash = window.location.hash
@@ -19,47 +19,52 @@ const hash = window.location.hash
 
 window.location.hash = ''
 
-class App extends React.Component {
-	state = {
-		token: localStorage.getItem('token') ? localStorage.getItem('token') : null,
-	}
+const App = () => {
+	const [token, setToken] = useState(sessionStorage.getItem('token') || null)
+	const [topTracks, setTopTracks] = useState(null)
 
-	componentDidMount() {
-		// Set token
-		let _token = hash.access_token
+	useEffect(() => {
+		const _token = hash.access_token
+
 		if (_token) {
-			this.setState({ token: _token })
-			localStorage.setItem('token', _token)
+			setToken(_token)
+			sessionStorage.setItem('token', _token)
 		}
 
-		// Runs is user is auth'd
-		if (this.state.token) {
-			const userTopTracksResponse = spotify.get('/me/top/tracks', {
-				headers: {
-					Authorization: `Bearer ${this.state.token}`,
-				},
-			})
+		if (token) {
+			getTopTracks()
 		}
+	}, [token])
+
+	const getTopTracks = async () => {
+		const { data } = await spotify.get('/me/top/tracks', {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			params: {
+				time_range: 'medium_term',
+			},
+		})
+
+		setTopTracks(data.items)
 	}
 
-	render() {
-		return (
-			<div>
-				{!this.state.token && (
-					<a
-						href={`${authEndpoint}?client_id=${
-							process.env.REACT_APP_SPOTIFY_CLIENT_ID
-						}&redirect_uri=${redirectUri}&scope=${scopes.join(
-							'%20'
-						)}&response_type=token&show_dialog=true`}
-					>
-						Login to Spotify
-					</a>
-				)}
-				{this.state.token && <h1>LOGGED IN {this.state.token}</h1>}
-			</div>
-		)
-	}
+	return (
+		<div>
+			{!token && (
+				<a
+					href={`${authEndpoint}?client_id=${
+						process.env.REACT_APP_SPOTIFY_CLIENT_ID
+					}&redirect_uri=${redirectUri}&scope=${scopes.join(
+						'%20'
+					)}&response_type=token&show_dialog=true`}
+				>
+					Login to Spotify
+				</a>
+			)}
+			{token && <h1>LOGGED IN {token}</h1>}
+		</div>
+	)
 }
 
 export default App
