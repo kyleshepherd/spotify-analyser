@@ -21,7 +21,8 @@ window.location.hash = ''
 
 const App = () => {
 	const [token, setToken] = useState(sessionStorage.getItem('token') || null)
-	const [topTracks, setTopTracks] = useState(null)
+	const [topTracks, setTopTracks] = useState([])
+	const [trackAnalysis, setTrackAnalysis] = useState([])
 
 	useEffect(() => {
 		const _token = hash.access_token
@@ -49,6 +50,33 @@ const App = () => {
 		setTopTracks(data.items)
 	}
 
+	useEffect(() => {
+		const analyseTracks = async () => {
+			if (topTracks.length > 0) {
+				const analysed = []
+
+				for (const track of topTracks) {
+					const analysedTrack = await analyseTrack(track)
+					analysed.push(analysedTrack)
+				}
+
+				setTrackAnalysis(analysed)
+			}
+		}
+
+		analyseTracks()
+	}, [topTracks])
+
+	const analyseTrack = async track => {
+		const trackAnalysis = await spotify.get(`/audio-features/${track.id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		return trackAnalysis.data
+	}
+
 	return (
 		<div>
 			{!token && (
@@ -62,7 +90,7 @@ const App = () => {
 					Login to Spotify
 				</a>
 			)}
-			{token && <h1>LOGGED IN {token}</h1>}
+			{token && <h1>LOGGED IN</h1>}
 		</div>
 	)
 }
