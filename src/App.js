@@ -76,7 +76,6 @@ const App = () => {
 					danceability: calcAverageStat('danceability'),
 					energy: calcAverageStat('energy'),
 					instrumentalness: calcAverageStat('instrumentalness'),
-					liveness: calcAverageStat('liveness'),
 					valence: calcAverageStat('valence'),
 				}
 
