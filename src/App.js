@@ -24,6 +24,7 @@ const App = () => {
 	const [topTracks, setTopTracks] = useState([])
 	const [analysedTracks, setAnalysedTracks] = useState([])
 	const [stats, setStats] = useState(null)
+	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
 		const _token = hash.access_token
@@ -33,22 +34,30 @@ const App = () => {
 			sessionStorage.setItem('token', _token)
 		}
 
-		if (token) {
+		if (token !== null) {
+			setLoading(true)
 			getTopTracks()
 		}
 	}, [token])
 
 	const getTopTracks = async () => {
-		const { data } = await spotify.get('/me/top/tracks', {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			params: {
-				time_range: 'medium_term',
-			},
-		})
-
-		setTopTracks(data.items)
+		spotify
+			.get('/me/top/tracks', {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				params: {
+					time_range: 'medium_term',
+				},
+			})
+			.then(response => {
+				setTopTracks(response.data.items)
+			})
+			.catch(error => {
+				setToken(null)
+				sessionStorage.setItem('token', null)
+				setLoading(false)
+			})
 	}
 
 	useEffect(() => {
@@ -80,6 +89,7 @@ const App = () => {
 				}
 
 				setStats(_stats)
+				setLoading(false)
 			}
 		}
 
@@ -103,7 +113,7 @@ const App = () => {
 			statTotal += track[stat]
 		})
 
-		return stat, statTotal / analysedTracks.length
+		return statTotal / analysedTracks.length
 	}
 
 	return (
