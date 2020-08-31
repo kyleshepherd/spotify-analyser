@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import spotify from './apis/spotify'
+import LoginButton from './components/LoginButton'
+import Footer from './components/Footer'
 
 export const authEndpoint = 'https://accounts.spotify.com/authorize'
 
@@ -118,18 +120,22 @@ const App = () => {
 
 	return (
 		<div>
-			{!token && (
-				<a
-					href={`${authEndpoint}?client_id=${
-						process.env.REACT_APP_SPOTIFY_CLIENT_ID
-					}&redirect_uri=${redirectUri}&scope=${scopes.join(
-						'%20'
-					)}&response_type=token&show_dialog=true`}
-				>
-					Login to Spotify
-				</a>
-			)}
-			{token && <h1>LOGGED IN</h1>}
+			<>
+				<h1 className="font-black uppercase text-4xl tracking-widest italic text-center mb-8">
+					Statify
+				</h1>
+
+				{!token && (
+					<LoginButton
+						authEndpoint={authEndpoint}
+						redirectUri={redirectUri}
+						scopes={scopes}
+					/>
+				)}
+				{token && <h1>LOGGED IN</h1>}
+
+				<Footer />
+			</>
 		</div>
 	)
 }
