@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import spotify from './apis/spotify'
 import LoginButton from './components/LoginButton'
 import Footer from './components/Footer'
+import LoadingSpinner from './components/LoadingSpinner'
+import Stats from './components/Stats'
 
 export const authEndpoint = 'https://accounts.spotify.com/authorize'
 
@@ -115,7 +117,7 @@ const App = () => {
 			statTotal += track[stat]
 		})
 
-		return statTotal / analysedTracks.length
+		return Math.round((statTotal / analysedTracks.length) * 1000) / 100
 	}
 
 	return (
@@ -132,7 +134,19 @@ const App = () => {
 						scopes={scopes}
 					/>
 				)}
-				{token && <h1>LOGGED IN</h1>}
+				{token && (
+					<>
+						{loading ? (
+							<LoadingSpinner />
+						) : (
+							<>
+								{stats !== null && Object.keys(stats).length > 0 ? (
+									<Stats stats={stats} />
+								) : null}
+							</>
+						)}
+					</>
+				)}
 
 				<Footer />
 			</>
