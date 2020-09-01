@@ -4,7 +4,6 @@ import LoginButton from './components/LoginButton'
 import Footer from './components/Footer'
 import LoadingSpinner from './components/LoadingSpinner'
 import Stats from './components/Stats'
-import LogoutButton from './components/LogoutButton'
 
 export const authEndpoint = 'https://accounts.spotify.com/authorize'
 
@@ -52,10 +51,17 @@ const App = () => {
 				},
 				params: {
 					time_range: 'medium_term',
+					limit: 50,
 				},
 			})
 			.then(response => {
-				setTopTracks(response.data.items)
+				const tracks = []
+
+				response.data.items.forEach(track => {
+					tracks.push(track.id)
+				})
+
+				setTopTracks(tracks)
 			})
 			.catch(error => {
 				setToken(null)
@@ -67,14 +73,16 @@ const App = () => {
 	useEffect(() => {
 		const analyseTracks = async () => {
 			if (topTracks.length > 0) {
-				const analysed = []
+				const trackAnalysis = await spotify.get('/audio-features/', {
+					params: {
+						ids: topTracks.join(','),
+					},
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
 
-				for (const track of topTracks) {
-					const analysedTrack = await analyseTrack(track)
-					analysed.push(analysedTrack)
-				}
-
-				setAnalysedTracks(analysed)
+				setAnalysedTracks(trackAnalysis.data.audio_features)
 			}
 		}
 
@@ -99,16 +107,6 @@ const App = () => {
 
 		buildStats()
 	}, [analysedTracks])
-
-	const analyseTrack = async track => {
-		const trackAnalysis = await spotify.get(`/audio-features/${track.id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
-
-		return trackAnalysis.data
-	}
 
 	const calcAverageStat = stat => {
 		let statTotal = 0
@@ -143,12 +141,6 @@ const App = () => {
 								{stats !== null && Object.keys(stats).length > 0 ? (
 									<Stats stats={stats} />
 								) : null}
-								<LogoutButton
-									clickHandler={() => {
-										setToken(null)
-										sessionStorage.setItem('token', null)
-									}}
-								/>
 							</>
 						)}
 					</>
