@@ -18,7 +18,7 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"build:tailwind": "npx tailwindcss build src/css/input.css -o src/css/style.css",
-		"prod:build": "NODE_ENV=production npm run build:tailwind react-scripts build"
+		"prod:build": "NODE_ENV=production npm run build:tailwind CI= react-scripts build"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
