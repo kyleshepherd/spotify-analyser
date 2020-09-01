@@ -1,10 +1,12 @@
 import React from 'react'
 
-const StatBar = ({ name, stat, leftSvg, rightSvg }) => {
+const StatBar = ({ name, stat }) => {
 	return (
 		<div>
 			<div className="flex items-end mb-6">
-				<div className="w-10">{leftSvg}</div>
+				<div className="font-bold italic tracking-wider text-center uppercase">
+					0
+				</div>
 				<div className="flex-1 mx-4">
 					<h2 className="font-bold italic tracking-wider text-center uppercase mb-1">
 						{name}
@@ -14,7 +16,9 @@ const StatBar = ({ name, stat, leftSvg, rightSvg }) => {
 						style={{ width: `${stat * 10}%` }}
 					></div>
 				</div>
-				<div className="w-10">{rightSvg}</div>
+				<div className="font-bold italic tracking-wider text-center uppercase">
+					10
+				</div>
 			</div>
 		</div>
 	)
