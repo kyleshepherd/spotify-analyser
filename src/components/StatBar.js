@@ -7,7 +7,7 @@ const StatBar = ({ name, stat }) => {
 				<div className="font-bold italic tracking-wider text-center uppercase">
 					0
 				</div>
-				<div className="flex-1 mx-4">
+				<div className="flex-1 mx-4 relative">
 					<h2 className="font-bold italic tracking-wider text-center uppercase mb-1">
 						{name}
 					</h2>
@@ -15,6 +15,12 @@ const StatBar = ({ name, stat }) => {
 						className="bg-white h-6"
 						style={{ width: `${stat * 10}%` }}
 					></div>
+					<span
+						className="absolute top-full"
+						style={{ left: `${stat * 10 - 2}%` }}
+					>
+						{stat}
+					</span>
 				</div>
 				<div className="font-bold italic tracking-wider text-center uppercase">
 					10

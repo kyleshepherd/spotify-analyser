@@ -121,7 +121,7 @@ const App = () => {
 	}
 
 	return (
-		<div>
+		<div className="text-white font-body bg-pink-300 py-2 px-4">
 			<>
 				<h1 className="font-black uppercase text-4xl tracking-widest italic text-center mb-8">
 					Statify

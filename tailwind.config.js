@@ -1,10 +1,16 @@
 module.exports = {
-	purge: ['./src/**/*.js', './src/*.js'],
+	purge: {
+		content: ['./src/*.js', './src/**/*.js'],
+	},
 	theme: {
 		fontFamily: {
 			body: ['Inter', 'sans-serif'],
 		},
-		extend: {},
+		extend: {
+			inset: {
+				full: '100%',
+			},
+		},
 	},
 	variants: {},
 	plugins: [],
