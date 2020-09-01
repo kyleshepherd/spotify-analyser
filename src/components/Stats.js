@@ -1,7 +1,5 @@
 import React from 'react'
 import StatBar from './StatBar'
-import { ReactComponent as Acoustic } from '../svg/acoustic.svg'
-import { ReactComponent as Drum } from '../svg/drum.svg'
 
 const Stats = ({ stats }) => {
 	return (

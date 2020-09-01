@@ -3,7 +3,7 @@ import React from 'react'
 const StatBar = ({ name, stat }) => {
 	return (
 		<div>
-			<div className="flex items-end mb-6">
+			<div className="flex items-end mb-8">
 				<div className="font-bold italic tracking-wider text-center uppercase">
 					0
 				</div>

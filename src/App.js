@@ -4,6 +4,7 @@ import LoginButton from './components/LoginButton'
 import Footer from './components/Footer'
 import LoadingSpinner from './components/LoadingSpinner'
 import Stats from './components/Stats'
+import LogoutButton from './components/LogoutButton'
 
 export const authEndpoint = 'https://accounts.spotify.com/authorize'
 
@@ -143,6 +144,12 @@ const App = () => {
 								{stats !== null && Object.keys(stats).length > 0 ? (
 									<Stats stats={stats} />
 								) : null}
+								<LogoutButton
+									clickHandler={() => {
+										setToken(null)
+										sessionStorage.setItem('token', null)
+									}}
+								/>
 							</>
 						)}
 					</>
