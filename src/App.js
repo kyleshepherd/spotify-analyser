@@ -8,7 +8,6 @@ import LogoutButton from './components/LogoutButton'
 
 export const authEndpoint = 'https://accounts.spotify.com/authorize'
 
-const redirectUri = 'http://localhost:3000/'
 const scopes = ['user-top-read']
 
 const hash = window.location.hash
@@ -131,7 +130,7 @@ const App = () => {
 				{!token && (
 					<LoginButton
 						authEndpoint={authEndpoint}
-						redirectUri={redirectUri}
+						redirectUri={process.env.REACT_APP_REDIRECT_URI}
 						scopes={scopes}
 					/>
 				)}
