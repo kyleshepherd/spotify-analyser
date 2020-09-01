@@ -108,16 +108,6 @@ const App = () => {
 		buildStats()
 	}, [analysedTracks])
 
-	const analyseTrack = async track => {
-		const trackAnalysis = await spotify.get(`/audio-features/${track}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
-
-		return trackAnalysis.data
-	}
-
 	const calcAverageStat = stat => {
 		let statTotal = 0
 
