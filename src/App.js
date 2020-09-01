@@ -143,12 +143,6 @@ const App = () => {
 								{stats !== null && Object.keys(stats).length > 0 ? (
 									<Stats stats={stats} />
 								) : null}
-								<LogoutButton
-									clickHandler={() => {
-										setToken(null)
-										sessionStorage.setItem('token', null)
-									}}
-								/>
 							</>
 						)}
 					</>
